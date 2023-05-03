@@ -1,25 +1,30 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+	"author": "Quentin Ayroles",
+	"description": "Quentin Ayroles' Personal Companion App",
+	"developer": {
+		"name": "Quentin Ayroles",
+		"url": "https://github.com/Quentayro"
+	},
+	"display": "standalone",
+	"icons": [
+		{
+			"sizes": "64x64 32x32 24x24 16x16",
+			"src": "favicon.ico",
+			"type": "image/x-icon"
+		},
+		{
+			"sizes": "192x192",
+			"src": "logo192.png",
+			"type": "image/png"
+		},
+		{
+			"sizes": "512x512",
+			"src": "logo512.png",
+			"type": "image/png"
+		}
+	],
+	"manifest_version": 2,
+	"name": "Quentin Ayroles' Personal Companion App",
+	"short_name": "QxPCA",
+	"start_url": "."
 }
