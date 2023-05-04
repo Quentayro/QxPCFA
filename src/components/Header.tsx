@@ -4,14 +4,14 @@ import { RouterLink } from 'components';
 import { backgroundColor } from 'utils/colors';
 import { headerHeightConstant } from 'utils/constants';
 import { homePath } from 'utils/paths';
-import { centeredStyle, subtitleStyle } from 'utils/styles';
+import { centeredStyle, h2Style } from 'utils/styles';
 import { logoText } from 'utils/texts';
 
 export const Header = () => {
 	return (
 		<StyledHeader>
 			<RouterLink
-				customStyle={subtitleStyle}
+				customStyle={h2Style}
 				to={homePath}
 			>
 				{logoText}
