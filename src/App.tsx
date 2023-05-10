@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { Layout } from 'components';
-import { Error404, Home } from 'pages';
-import { homePath } from 'utils/paths';
+import { Error404, Home, MusicArtists } from 'pages';
+import { homePath, musicArtistsPath } from 'utils/paths';
 
 export const App = () => {
 	const router = createBrowserRouter([
@@ -13,6 +13,10 @@ export const App = () => {
 				{
 					path: homePath,
 					element: <Home />
+				},
+				{
+					path: musicArtistsPath,
+					element: <MusicArtists />
 				}
 			]
 		}

@@ -1,0 +1,1 @@
+export { AddArtistModal } from './AddArtistModal';

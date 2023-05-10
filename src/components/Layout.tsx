@@ -6,16 +6,14 @@ import { backgroundColor, mainColor } from 'utils/colors';
 import { headerHeightConstant } from 'utils/constants';
 import { centeredColumnStyle } from 'utils/styles';
 
-export const Layout = () => {
-	return (
-		<StyledLayout>
-			<Header />
-			<StyledOutletContainer>
-				<Outlet />
-			</StyledOutletContainer>
-		</StyledLayout>
-	);
-};
+export const Layout = () => (
+	<StyledLayout>
+		<Header />
+		<StyledOutletContainer>
+			<Outlet />
+		</StyledOutletContainer>
+	</StyledLayout>
+);
 
 export const StyledLayout = styled.div`
 	background-color: ${backgroundColor};

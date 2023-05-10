@@ -43,5 +43,5 @@
 		"target": "es5",
 		"skipLibCheck": true
 	},
-	"include": ["src"]
+	"include": ["src", "src/custom.d.ts"]
 }

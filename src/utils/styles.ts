@@ -1,13 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { activeColor, hoverColor } from 'utils/colors';
-
-export const buttonStyle = css`
-	border: 4px solid;
-	border-radius: 8px;
-	font-weight: 700;
-	padding: 8px 16px;
-`;
+import { activeColor, hoverColor, mainColor } from 'utils/colors';
 
 export const centeredStyle = css`
 	align-items: center;
@@ -15,17 +8,16 @@ export const centeredStyle = css`
 	justify-content: center;
 `;
 
-export const centeredColumnStyle = css`
-	flex-direction: column;
-	${centeredStyle}
-`;
-
 export const clickToActionStyle = css`
+	cursor: pointer;
+	fill: ${mainColor};
 	&:hover {
 		color: ${hoverColor};
+		fill: ${hoverColor};
 	}
 	&:active {
 		color: ${activeColor};
+		fill: ${activeColor};
 	}
 `;
 
@@ -43,6 +35,27 @@ export const h2Style = css`
 	font-size: 32px;
 	font-weight: 700;
 	padding: 8px 0;
+`;
+
+export const buttonStyle = css`
+	border: 4px solid;
+	border-radius: 8px;
+	font-weight: 700;
+	${centeredStyle}
+`;
+
+export const centeredColumnStyle = css`
+	flex-direction: column;
+	${centeredStyle}
+`;
+
+export const mdButtonStyle = css`
+	padding: 8px 16px;
+	${buttonStyle}
+`;
+
+export const StyledCenteredDiv = styled.div`
+	${centeredStyle}
 `;
 
 export const StyledH1 = styled.h1`
