@@ -6,11 +6,11 @@ import { backgroundColor, mainColor } from 'utils/colors';
 import { headerHeightConstant } from 'utils/constants';
 import { centeredColumnStyle } from 'utils/styles';
 
-type Props = {
+type PropsType = {
 	isErrorNotificationOpen: boolean;
 };
 
-export const Layout = (props: Props) => {
+export const Layout = (props: PropsType) => {
 	const { isErrorNotificationOpen } = props;
 
 	return (

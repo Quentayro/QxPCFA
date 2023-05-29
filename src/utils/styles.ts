@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { activeColor, hoverColor, mainColor } from 'utils/colors';
+import { activeColor, disabledColor, hoverColor, mainColor } from 'utils/colors';
 
 export const centeredStyle = css`
 	align-items: center;
@@ -18,6 +18,11 @@ export const clickToActionStyle = css`
 	&:active {
 		color: ${activeColor};
 		fill: ${activeColor};
+	}
+	&:disabled {
+		color: ${disabledColor};
+		cursor: not-allowed;
+		fill: ${disabledColor};
 	}
 `;
 

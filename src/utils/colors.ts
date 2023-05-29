@@ -1,5 +1,6 @@
 export const activeColor = 'red';
 export const backgroundColor = 'black';
+export const disabledColor = 'grey';
 export const errorColor = 'red';
 export const hoverColor = 'yellow';
 export const mainColor = 'white';

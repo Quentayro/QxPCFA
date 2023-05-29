@@ -6,13 +6,13 @@ import { clickToActionStyle } from 'utils/styles';
 
 import type { FlattenSimpleInterpolation } from 'styled-components';
 
-type Props = {
+type PropsType = {
 	children: React.ReactNode;
 	customStyle?: FlattenSimpleInterpolation | undefined;
 	to: string;
 };
 
-export const RouterLink = (props: Props) => {
+export const RouterLink = (props: PropsType) => {
 	const { children, customStyle, to } = props;
 
 	return (

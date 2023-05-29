@@ -1,28 +1,79 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useContext, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { Button, Input, Overlay } from 'components';
 import { modalBackgroundColor, spotifyColor } from 'utils/colors';
+import { Context } from 'utils/context';
+import { postMusicArtistEndpoint } from 'utils/endpoints';
 import { centeredColumnStyle, clickToActionStyle, mdButtonStyle } from 'utils/styles';
-import { artistSpotifyLinkText } from 'utils/texts';
+import {
+	addArtistText,
+	artistSpotifyLinkText,
+	errorArtistAlreadyAddedText,
+	errorInvalidInputText,
+	errorNoServerResponseText,
+	errorOperationFailedText,
+	errorProblemText,
+	errorText
+} from 'utils/texts';
 
-type Props = {
-	setIsOpen?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
+import type { BooleanDictionnaryType } from 'utils/types';
+
+type PropsType = {
+	artistsDictionnary: BooleanDictionnaryType;
+	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const AddArtistModal = (props: Props) => {
-	const { setIsOpen } = props;
+export const AddArtistModal = (props: PropsType) => {
+	const { artistsDictionnary, setIsOpen } = props;
 
-	const [artistSpotifyLinkInput, setArtistSpotifyLinkInput] = useState(
-		'https://open.spotify.com/artist/4eQJIXFEujzhTVVS1gIfu5?si=er21Ci5SRgub-MtbWbVPwg'
-	);
+	const context = useContext(Context);
+	const { openErrorNotification } = context;
 
-	const requestAddArtist = () => {
-		// TODO
-		console.log('XXX - requestAddArtist - XXX');
-		console.log('artistSpotifyLinkInput :', artistSpotifyLinkInput);
-		const spotifyId = artistSpotifyLinkInput.substring(32, 54);
-		console.log('spotifyId', spotifyId);
+	const [artistSpotifyLinkInput, setArtistSpotifyLinkInput] = useState('');
+	const [isAddArtistButtonDisabled, setIsAddArtistButtonDisabled] = useState(false);
+
+	const requestAddArtist = async () => {
+		setIsAddArtistButtonDisabled(true);
+
+		const spotifyId = artistSpotifyLinkInput.split('t/')[1]?.split('?si=')[0];
+
+		try {
+			if (!spotifyId) throw { code: 'ERR_INVALID_INPUT' };
+			if (artistsDictionnary[spotifyId]) throw { code: 'ERR_ARTIST_ALREADY_ADDED' };
+
+			await axios.post(postMusicArtistEndpoint, spotifyId, {
+				headers: { 'Content-Type': 'text/plain' }
+			});
+
+			setIsOpen(false);
+		} catch (error: any) {
+			const { code } = error;
+
+			setIsAddArtistButtonDisabled(false);
+
+			const errorMessage = () => {
+				switch (code) {
+					case 'ERR_ARTIST_ALREADY_ADDED':
+						setArtistSpotifyLinkInput('');
+						return errorArtistAlreadyAddedText;
+					case 'ERR_BAD_REQUEST':
+						setArtistSpotifyLinkInput('');
+						return errorOperationFailedText;
+					case 'ERR_BAD_RESPONSE':
+						return errorProblemText;
+					case 'ERR_INVALID_INPUT':
+						setArtistSpotifyLinkInput('');
+						return errorInvalidInputText;
+					case 'ERR_NETWORK':
+						return errorNoServerResponseText;
+					default:
+						return errorText + ` : ${error.code}`;
+				}
+			};
+			openErrorNotification(errorMessage());
+		}
 	};
 
 	return (
@@ -46,8 +97,9 @@ export const AddArtistModal = (props: Props) => {
 				<Button
 					customStyle={paddedButtonStyle}
 					onClick={requestAddArtist}
+					isButtonDisabled={isAddArtistButtonDisabled}
 				>
-					Button
+					{addArtistText}
 				</Button>
 			</StyledModal>
 		</Overlay>

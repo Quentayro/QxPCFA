@@ -4,13 +4,13 @@ import { ClearIcon, PasteIcon } from 'assets/icons';
 import { Button } from 'components';
 import { centeredStyle, StyledCenteredDiv } from 'utils/styles';
 
-type Props = {
+type PropsType = {
 	input: string;
 	setInput: React.Dispatch<React.SetStateAction<string>>;
 	width?: string | undefined;
 };
 
-export const Input = (props: Props) => {
+export const Input = (props: PropsType) => {
 	const { input, setInput, width } = props;
 
 	const clear = () => setInput('');

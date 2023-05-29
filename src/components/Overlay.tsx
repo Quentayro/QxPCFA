@@ -2,14 +2,14 @@ import styled, { css } from 'styled-components';
 
 import { backgroundColor } from 'utils/colors';
 
-type Props = {
+type PropsType = {
 	children: React.ReactNode;
 	isBlocking?: boolean | undefined;
 	position?: 'bottom' | undefined;
 	setIsOpen?: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 };
 
-export const Overlay = (props: Props) => {
+export const Overlay = (props: PropsType) => {
 	const { children, isBlocking, position, setIsOpen } = props;
 
 	const closeOverlay = () => setIsOpen && setIsOpen(false);
