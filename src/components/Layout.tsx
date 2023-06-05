@@ -27,6 +27,7 @@ export const Layout = (props: PropsType) => {
 export const StyledLayout = styled.div`
 	background-color: ${backgroundColor};
 	color: ${mainColor};
+	cursor: default;
 	font-family: Lato, sans-serif;
 `;
 

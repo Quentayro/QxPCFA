@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useContext, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { Button, Input, Overlay } from 'components';
-import { modalBackgroundColor, spotifyColor } from 'utils/colors';
+import { Button, Input, Modal } from 'components';
+import { spotifyColor } from 'utils/colors';
 import { Context } from 'utils/context';
 import { postMusicArtistEndpoint } from 'utils/endpoints';
-import { centeredColumnStyle, clickToActionStyle, mdButtonStyle } from 'utils/styles';
+import { clickToActionStyle, mdButtonStyle } from 'utils/styles';
 import {
 	addArtistText,
 	artistSpotifyLinkText,
@@ -23,10 +23,11 @@ import type { BooleanDictionnaryType } from 'utils/types';
 type PropsType = {
 	artistsDictionnary: BooleanDictionnaryType;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	updateArtistsState: (response: AxiosResponse<any, any>) => void;
 };
 
 export const AddArtistModal = (props: PropsType) => {
-	const { artistsDictionnary, setIsOpen } = props;
+	const { artistsDictionnary, setIsOpen, updateArtistsState } = props;
 
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
@@ -43,10 +44,12 @@ export const AddArtistModal = (props: PropsType) => {
 			if (!spotifyId) throw { code: 'ERR_INVALID_INPUT' };
 			if (artistsDictionnary[spotifyId]) throw { code: 'ERR_ARTIST_ALREADY_ADDED' };
 
-			await axios.post(postMusicArtistEndpoint, spotifyId, {
+			const response = await axios.post(postMusicArtistEndpoint, spotifyId, {
 				headers: { 'Content-Type': 'text/plain' }
 			});
 
+			updateArtistsState(response);
+			setIsAddArtistButtonDisabled(false);
 			setIsOpen(false);
 		} catch (error: any) {
 			const { code } = error;
@@ -69,7 +72,7 @@ export const AddArtistModal = (props: PropsType) => {
 					case 'ERR_NETWORK':
 						return errorNoServerResponseText;
 					default:
-						return errorText + ` : ${error.code}`;
+						return `${errorText} : ${code}`;
 				}
 			};
 			openErrorNotification(errorMessage());
@@ -77,46 +80,29 @@ export const AddArtistModal = (props: PropsType) => {
 	};
 
 	return (
-		<Overlay
-			isBlocking={true}
-			setIsOpen={setIsOpen}
-		>
-			<StyledModal>
-				<StyledPaddedDiv>
-					<>{artistSpotifyLinkText[0]} </>
-					<StyledSpotifyLink href="https://open.spotify.com/">{artistSpotifyLinkText[1]}</StyledSpotifyLink>
-					<> {artistSpotifyLinkText[2]}</>
-				</StyledPaddedDiv>
+		<Modal setIsOpen={setIsOpen}>
+			<StyledPaddedDiv>
+				<>{artistSpotifyLinkText[0]} </>
+				<StyledSpotifyLink href="https://open.spotify.com/">{artistSpotifyLinkText[1]}</StyledSpotifyLink>
+				<> {artistSpotifyLinkText[2]}</>
+			</StyledPaddedDiv>
 
-				<Input
-					input={artistSpotifyLinkInput}
-					setInput={setArtistSpotifyLinkInput}
-					width="544px"
-				/>
+			<Input
+				input={artistSpotifyLinkInput}
+				setInput={setArtistSpotifyLinkInput}
+				width="544px"
+			/>
 
-				<Button
-					customStyle={paddedButtonStyle}
-					onClick={requestAddArtist}
-					isButtonDisabled={isAddArtistButtonDisabled}
-				>
-					{addArtistText}
-				</Button>
-			</StyledModal>
-		</Overlay>
+			<Button
+				customStyle={paddedButtonStyle}
+				onClick={requestAddArtist}
+				isButtonDisabled={isAddArtistButtonDisabled}
+			>
+				{addArtistText}
+			</Button>
+		</Modal>
 	);
 };
-
-const paddedButtonStyle = css`
-	margin-top: 32px;
-	${mdButtonStyle}
-`;
-
-const StyledModal = styled.div`
-	background-color: ${modalBackgroundColor};
-	border-radius: 8px;
-	${centeredColumnStyle}
-	padding: 32px;
-`;
 
 const StyledPaddedDiv = styled.div`
 	padding-bottom: 8px;
@@ -125,4 +111,9 @@ const StyledPaddedDiv = styled.div`
 const StyledSpotifyLink = styled.a`
 	color: ${spotifyColor};
 	${clickToActionStyle}
+`;
+
+const paddedButtonStyle = css`
+	margin-top: 32px;
+	${mdButtonStyle}
 `;

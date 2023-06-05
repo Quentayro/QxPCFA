@@ -9,7 +9,7 @@ export const centeredStyle = css`
 `;
 
 export const clickToActionStyle = css`
-	cursor: pointer;
+	cursor: pointer !important;
 	fill: ${mainColor};
 	&:hover {
 		color: ${hoverColor};
@@ -27,7 +27,6 @@ export const clickToActionStyle = css`
 `;
 
 const h1Style = css`
-	cursor: default;
 	font-family: Roboto, Lato, sans-serif;
 	font-size: 64px;
 	font-weight: 900;
@@ -39,6 +38,7 @@ export const h2Style = css`
 	font-family: Roboto, Lato, sans-serif;
 	font-size: 32px;
 	font-weight: 700;
+	margin: 0;
 	padding: 8px 0;
 `;
 
@@ -59,10 +59,26 @@ export const mdButtonStyle = css`
 	${buttonStyle}
 `;
 
+export const musicArtistPictureStyle = css`
+	object-fit: cover;
+`;
+
 export const StyledCenteredDiv = styled.div`
 	${centeredStyle}
 `;
 
 export const StyledH1 = styled.h1`
 	${h1Style}
+`;
+
+export const StyledH2 = styled.h2`
+	${h2Style}
+`;
+
+export const StyledMusicArtistPicture = styled.img`
+	border-radius: 2px;
+	flex-shrink: 0;
+	height: 160px;
+	width: 160px;
+	${musicArtistPictureStyle}
 `;

@@ -6,7 +6,7 @@ type PropsTypeType = {
 	children: React.ReactNode;
 	customStyle?: FlattenSimpleInterpolation | undefined;
 	isButtonDisabled?: boolean | undefined;
-	onClick: () => void;
+	onClick: (...args: any[]) => void;
 };
 
 export const Button = (props: PropsTypeType) => {
