@@ -52,6 +52,7 @@ import { clickToActionStyle } from 'utils/styles';
 
 export const MusicArtists = () => {
 	// TODO : Display first rank date
+	// TODO : update date ?
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
 
@@ -73,6 +74,19 @@ export const MusicArtists = () => {
 		useState(false);
 	const [isSortArtistByTotalTracksNumberButtonDisabled, setIsSortArtistByTotalTracksNumberButtonDisabled] =
 		useState(false);
+	const [isSortSuggestedArtistByNameButtonDisabled, setIsSortSuggestedArtistByNameButtonDisabled] = useState(false);
+	const [isSortSuggestedArtistByOriginalScoreButtonDisabled, setIsSortSuggestedArtistByOriginalScoreButtonDisabled] =
+		useState(false);
+	const [
+		isSortSuggestedArtistByOriginalTracksNumberButtonDisabled,
+		setIsSortSuggestedArtistByOriginalTracksNumberButtonDisabled
+	] = useState(false);
+	const [isSortSuggestedArtistByTotalScoreButtonDisabled, setIsSortSuggestedArtistByTotalScoreButtonDisabled] =
+		useState(false);
+	const [
+		isSortSuggestedArtistByTotalTracksNumberButtonDisabled,
+		setIsSortSuggestedArtistByTotalTracksNumberButtonDisabled
+	] = useState(false);
 	const [suggestedArtists, setSuggestedArtists] = useState<MusicArtistType[]>([]);
 	const [selectedGenre, setSelectedGenre] = useState('');
 	const [selectedSuggestedArtist, setSelectedSuggestedArtist] = useState<MusicArtistType>();
@@ -89,14 +103,23 @@ export const MusicArtists = () => {
 		!isAddSuggestedArtistModalOpen && setSelectedSuggestedArtist(undefined);
 	}, [isAddSuggestedArtistModalOpen]);
 
-	const ableAllArtistsSortButtons = () => {
-		setIsSortArtistByNameButtonDisabled(false);
-		setIsSortArtistByOriginalScoreButtonDisabled(false);
-		setIsSortArtistByOriginalTracksDurationButtonDisabled(false);
-		setIsSortArtistByOriginalTracksNumberButtonDisabled(false);
-		setIsSortArtistByTotalScoreButtonDisabled(false);
-		setIsSortArtistByTotalTracksDurationButtonDisabled(false);
-		setIsSortArtistByTotalTracksNumberButtonDisabled(false);
+	const ableAllArtistsSortButtons = (isSuggestions?: boolean | undefined) => {
+		console.log(isSuggestions);
+		if (isSuggestions) {
+			setIsSortSuggestedArtistByNameButtonDisabled(false);
+			setIsSortSuggestedArtistByOriginalScoreButtonDisabled(false);
+			setIsSortSuggestedArtistByOriginalTracksNumberButtonDisabled(false);
+			setIsSortSuggestedArtistByTotalScoreButtonDisabled(false);
+			setIsSortSuggestedArtistByTotalTracksNumberButtonDisabled(false);
+		} else {
+			setIsSortArtistByNameButtonDisabled(false);
+			setIsSortArtistByOriginalScoreButtonDisabled(false);
+			setIsSortArtistByOriginalTracksDurationButtonDisabled(false);
+			setIsSortArtistByOriginalTracksNumberButtonDisabled(false);
+			setIsSortArtistByTotalScoreButtonDisabled(false);
+			setIsSortArtistByTotalTracksDurationButtonDisabled(false);
+			setIsSortArtistByTotalTracksNumberButtonDisabled(false);
+		}
 	};
 
 	const openAddArtistModal = () => setIsAddArtistmodalOpen(true);
@@ -152,31 +175,59 @@ export const MusicArtists = () => {
 			</>
 		));
 
+	const renderSimplifiedSuggestedArtistLegend = (artist: MusicArtistType) => {
+		if (
+			isSortSuggestedArtistByOriginalTracksNumberButtonDisabled ||
+			isSortSuggestedArtistByTotalTracksNumberButtonDisabled ||
+			isSortSuggestedArtistByTotalScoreButtonDisabled
+		) {
+			return isSortSuggestedArtistByTotalScoreButtonDisabled ? (
+				<StyledScoreLegend scoreColor={getQualityGradientColor(artist.totalScore)}>
+					{`${Math.round(artist.totalScore)} %`}
+				</StyledScoreLegend>
+			) : (
+				<>
+					{isSortSuggestedArtistByOriginalTracksNumberButtonDisabled
+						? artist.originalTracksNumber
+						: artist.totalTracksNumber}
+				</>
+			);
+		} else {
+			return;
+		}
+	};
+
 	const sortArtistsByName = (
 		artists: MusicArtistType[],
-		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
+		isSuggestions?: boolean | undefined
 	) => {
+		console.log(artists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
 			return artist0.name < artist1.name ? -1 : 1;
 		});
+		console.log(sortedArtists);
 		setArtists(sortedArtists);
-		ableAllArtistsSortButtons();
-		setIsSortArtistByNameButtonDisabled(true);
+		ableAllArtistsSortButtons(isSuggestions);
+		!isSuggestions ? setIsSortArtistByNameButtonDisabled(true) : setIsSortSuggestedArtistByNameButtonDisabled(true);
 	};
 
 	const sortArtistsByOriginalScore = (
 		artists: MusicArtistType[],
-		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
+		isSuggestions?: boolean | undefined
 	) => {
-		sortArtistsByName(artists, setArtists);
+		sortArtistsByName(artists, setArtists, isSuggestions);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
 			return artist0.originalScore > artist1.originalScore ? -1 : 1;
 		});
 		setArtists(sortedArtists);
-		ableAllArtistsSortButtons();
-		setIsSortArtistByOriginalScoreButtonDisabled(true);
+		ableAllArtistsSortButtons(isSuggestions);
+		!isSuggestions
+			? setIsSortArtistByOriginalScoreButtonDisabled(true)
+			: setIsSortSuggestedArtistByOriginalScoreButtonDisabled(true);
 	};
 
 	const sortArtistsByOriginalTracksDuration = (
@@ -195,30 +246,38 @@ export const MusicArtists = () => {
 
 	const sortArtistsByOriginalTracksNumber = (
 		artists: MusicArtistType[],
-		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
+		isSuggestions?: boolean | undefined
 	) => {
-		sortArtistsByName(artists, setArtists);
+		sortArtistsByName(artists, setArtists, isSuggestions);
+		isSuggestions && sortArtistsByOriginalScore(artists, setArtists, isSuggestions);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
 			return artist0.originalTracksNumber > artist1.originalTracksNumber ? -1 : 1;
 		});
 		setArtists(sortedArtists);
-		ableAllArtistsSortButtons();
-		setIsSortArtistByOriginalTracksNumberButtonDisabled(true);
+		ableAllArtistsSortButtons(isSuggestions);
+		!isSuggestions
+			? setIsSortArtistByOriginalTracksNumberButtonDisabled(true)
+			: setIsSortSuggestedArtistByOriginalTracksNumberButtonDisabled(true);
 	};
 
 	const sortArtistsByTotalScore = (
 		artists: MusicArtistType[],
-		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
+		isSuggestions?: boolean | undefined
 	) => {
-		sortArtistsByName(artists, setArtists);
+		sortArtistsByName(artists, setArtists, isSuggestions);
+		isSuggestions && sortArtistsByOriginalScore(artists, setArtists, isSuggestions);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
 			return artist0.totalScore > artist1.totalScore ? -1 : 1;
 		});
 		setArtists(sortedArtists);
-		ableAllArtistsSortButtons();
-		setIsSortArtistByTotalScoreButtonDisabled(true);
+		ableAllArtistsSortButtons(isSuggestions);
+		!isSuggestions
+			? setIsSortArtistByTotalScoreButtonDisabled(true)
+			: setIsSortSuggestedArtistByTotalScoreButtonDisabled(true);
 	};
 
 	const sortArtistsByTotalTracksDuration = (
@@ -237,16 +296,20 @@ export const MusicArtists = () => {
 
 	const sortArtistsByTotalTracksNumber = (
 		artists: MusicArtistType[],
-		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
+		isSuggestions?: boolean | undefined
 	) => {
-		sortArtistsByName(artists, setArtists);
+		sortArtistsByName(artists, setArtists, isSuggestions);
+		isSuggestions && sortArtistsByOriginalScore(artists, setArtists, isSuggestions);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
 			return artist0.totalTracksNumber > artist1.totalTracksNumber ? -1 : 1;
 		});
 		setArtists(sortedArtists);
-		ableAllArtistsSortButtons();
-		setIsSortArtistByTotalTracksNumberButtonDisabled(true);
+		ableAllArtistsSortButtons(isSuggestions);
+		!isSuggestions
+			? setIsSortArtistByTotalTracksNumberButtonDisabled(true)
+			: setIsSortSuggestedArtistByTotalTracksNumberButtonDisabled(true);
 	};
 
 	const switchArtistView = () => setAreArtistsDetailed(!areArtistsDetailed);
@@ -265,6 +328,7 @@ export const MusicArtists = () => {
 		updateGenresState(genres);
 
 		sortArtistsByName(artists, setArtists);
+		sortArtistsByName(suggestedArtists, setSuggestedArtists, true);
 	};
 
 	const updateGenresState = (genres: MusicGenreType[]) => {
@@ -494,6 +558,54 @@ export const MusicArtists = () => {
 			)}
 
 			<StyledH2>{suggestionsText}</StyledH2>
+			<StyledButtonsRow>
+				<StyledSortLabel>{sortText}</StyledSortLabel>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortSuggestedArtistByNameButtonDisabled}
+					onClick={() => {
+						sortArtistsByName(suggestedArtists, setSuggestedArtists, true);
+					}}
+				>
+					{nameText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortSuggestedArtistByOriginalTracksNumberButtonDisabled}
+					onClick={() => {
+						sortArtistsByOriginalTracksNumber(suggestedArtists, setSuggestedArtists, true);
+					}}
+				>
+					{originalTracksNumberText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortSuggestedArtistByOriginalScoreButtonDisabled}
+					onClick={() => {
+						sortArtistsByOriginalScore(suggestedArtists, setSuggestedArtists, true);
+					}}
+				>
+					{originalScoreText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortSuggestedArtistByTotalTracksNumberButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalTracksNumber(suggestedArtists, setSuggestedArtists, true);
+					}}
+				>
+					{totalTracksNumberText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortSuggestedArtistByTotalScoreButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalScore(suggestedArtists, setSuggestedArtists, true);
+					}}
+				>
+					{totalScoreText}
+				</Button>
+			</StyledButtonsRow>
 			<StyledGrid>
 				{suggestedArtists.map((artist: MusicArtistType) => (
 					<Button
@@ -510,7 +622,15 @@ export const MusicArtists = () => {
 								}`}
 								alt={`${artist.name} picture`}
 							/>
-							<>{artist.name}</>
+							<div>
+								<>{`${artist.name} -`}</>
+								{!isSortSuggestedArtistByTotalScoreButtonDisabled && (
+									<StyledScoreLegend scoreColor={getQualityGradientColor(artist.originalScore)}>
+										{`${Math.round(artist.originalScore)} %`}
+									</StyledScoreLegend>
+								)}
+							</div>
+							{renderSimplifiedSuggestedArtistLegend(artist)}
 						</StyledSuggestedArtistCard>
 					</Button>
 				))}
@@ -673,8 +793,9 @@ const StyledScore = styled.div<{ scoreColor?: string | undefined }>`
 	padding-bottom: 0;
 `;
 
-const StyledScoreLegend = styled.div<{ scoreColor?: string | undefined }>`
+const StyledScoreLegend = styled.span<{ scoreColor?: string | undefined }>`
 	margin-left: 4px;
+	white-space: nowrap;
 	color: ${(props) => props.scoreColor};
 `;
 
