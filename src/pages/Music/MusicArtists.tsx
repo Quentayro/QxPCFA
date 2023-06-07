@@ -172,7 +172,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.originalScore < artist1.originalScore ? -1 : 1;
+			return artist0.originalScore > artist1.originalScore ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -186,7 +186,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.originalTracksDuration < artist1.originalTracksDuration ? -1 : 1;
+			return artist0.originalTracksDuration > artist1.originalTracksDuration ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -200,7 +200,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.originalTracksNumber < artist1.originalTracksNumber ? -1 : 1;
+			return artist0.originalTracksNumber > artist1.originalTracksNumber ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -214,7 +214,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.totalScore < artist1.totalScore ? -1 : 1;
+			return artist0.totalScore > artist1.totalScore ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -228,7 +228,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.totalTracksDuration < artist1.totalTracksDuration ? -1 : 1;
+			return artist0.totalTracksDuration > artist1.totalTracksDuration ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -242,7 +242,7 @@ export const MusicArtists = () => {
 		sortArtistsByName(artists, setArtists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.totalTracksNumber < artist1.totalTracksNumber ? -1 : 1;
+			return artist0.totalTracksNumber > artist1.totalTracksNumber ? -1 : 1;
 		});
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons();
@@ -315,15 +315,6 @@ export const MusicArtists = () => {
 				</Button>
 				<Button
 					customStyle={sortButtonStyle}
-					isButtonDisabled={isSortArtistByOriginalScoreButtonDisabled}
-					onClick={() => {
-						sortArtistsByOriginalScore(artists, setArtists);
-					}}
-				>
-					{originalScoreText}
-				</Button>
-				<Button
-					customStyle={sortButtonStyle}
 					isButtonDisabled={isSortArtistByOriginalTracksDurationButtonDisabled}
 					onClick={() => {
 						sortArtistsByOriginalTracksDuration(artists, setArtists);
@@ -342,12 +333,12 @@ export const MusicArtists = () => {
 				</Button>
 				<Button
 					customStyle={sortButtonStyle}
-					isButtonDisabled={isSortArtistByTotalScoreButtonDisabled}
+					isButtonDisabled={isSortArtistByOriginalScoreButtonDisabled}
 					onClick={() => {
-						sortArtistsByTotalScore(artists, setArtists);
+						sortArtistsByOriginalScore(artists, setArtists);
 					}}
 				>
-					{totalScoreText}
+					{originalScoreText}
 				</Button>
 				<Button
 					customStyle={sortButtonStyle}
@@ -366,6 +357,15 @@ export const MusicArtists = () => {
 					}}
 				>
 					{totalTracksNumberText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByTotalScoreButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalScore(artists, setArtists);
+					}}
+				>
+					{totalScoreText}
 				</Button>
 			</StyledButtonsRow>
 			{areArtistsDetailed ? (
