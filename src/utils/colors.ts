@@ -5,6 +5,7 @@ export const errorColor = 'red';
 export const hoverColor = 'yellow';
 export const mainColor = 'white';
 export const modalBackgroundColor = '#181818';
+export const pushedColor = 'dodgerblue';
 export const qualityGradientColors = [
 	'red',
 	'#FF2B00',

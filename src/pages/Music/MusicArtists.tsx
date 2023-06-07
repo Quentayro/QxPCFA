@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 import { Button, RouterLink } from 'components';
 import { AddArtistModal, AddGenreDisplayTextModal, AddSuggestedArtistModal } from 'pages/Music/components';
-import { getQualityGradientColor, warningColor } from 'utils/colors';
+import { getQualityGradientColor, pushedColor, warningColor } from 'utils/colors';
 import { musicPicturePlaceHolder, spotifyPictureUrlPrefix } from 'utils/constants';
 import { Context } from 'utils/context';
 import { getMusicArtistsEndpoint } from 'utils/endpoints';
@@ -31,30 +31,48 @@ import {
 	durationText,
 	errorNoServerResponseText,
 	errorText,
+	nameText,
+	originalDurationText,
 	originalScoreText,
 	originalTitlesText,
+	originalTracksNumberText,
 	remixText,
 	sText,
 	simplifiedViewText,
+	sortText,
 	suggestionsText,
+	totalDurationText,
 	totalScoreText,
-	totalText
+	totalText,
+	totalTracksNumberText
 } from 'utils/texts';
 import type { BooleanDictionnaryType, MusicArtistType, MusicGenreType, StringDictionnaryType } from 'utils/types';
 import { h2Style } from 'utils/styles';
+import { clickToActionStyle } from 'utils/styles';
 
 export const MusicArtists = () => {
 	// TODO : Display first rank date
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
 
-	const [areArtistsDetailed, setAreArtistsDetailed] = useState(true); // TODO : change to false
+	const [areArtistsDetailed, setAreArtistsDetailed] = useState(false);
 	const [artists, setArtists] = useState<MusicArtistType[]>([]);
 	const [artistsDictionnary, setArtistsDictionnary] = useState<BooleanDictionnaryType>({});
 	const [genresDictionnary, setGenresDictionnary] = useState<StringDictionnaryType>({});
 	const [isAddArtistModalOpen, setIsAddArtistmodalOpen] = useState(false);
 	const [isAddGenreDisplayTextModalOpen, setIsAddGenreDisplayTextModalOpen] = useState(false);
 	const [isAddSuggestedArtistModalOpen, setIsAddSuggestedArtistModalOpen] = useState(false);
+	const [isSortArtistByNameButtonDisabled, setIsSortArtistByNameButtonDisabled] = useState(false);
+	const [isSortArtistByOriginalScoreButtonDisabled, setIsSortArtistByOriginalScoreButtonDisabled] = useState(false);
+	const [isSortArtistByOriginalTracksDurationButtonDisabled, setIsSortArtistByOriginalTracksDurationButtonDisabled] =
+		useState(false);
+	const [isSortArtistByOriginalTracksNumberButtonDisabled, setIsSortArtistByOriginalTracksNumberButtonDisabled] =
+		useState(false);
+	const [isSortArtistByTotalScoreButtonDisabled, setIsSortArtistByTotalScoreButtonDisabled] = useState(false);
+	const [isSortArtistByTotalTracksDurationButtonDisabled, setIsSortArtistByTotalTracksDurationButtonDisabled] =
+		useState(false);
+	const [isSortArtistByTotalTracksNumberButtonDisabled, setIsSortArtistByTotalTracksNumberButtonDisabled] =
+		useState(false);
 	const [suggestedArtists, setSuggestedArtists] = useState<MusicArtistType[]>([]);
 	const [selectedGenre, setSelectedGenre] = useState('');
 	const [selectedSuggestedArtist, setSelectedSuggestedArtist] = useState<MusicArtistType>();
@@ -70,6 +88,16 @@ export const MusicArtists = () => {
 	useEffect(() => {
 		!isAddSuggestedArtistModalOpen && setSelectedSuggestedArtist(undefined);
 	}, [isAddSuggestedArtistModalOpen]);
+
+	const ableAllArtistsSortButtons = () => {
+		setIsSortArtistByNameButtonDisabled(false);
+		setIsSortArtistByOriginalScoreButtonDisabled(false);
+		setIsSortArtistByOriginalTracksDurationButtonDisabled(false);
+		setIsSortArtistByOriginalTracksNumberButtonDisabled(false);
+		setIsSortArtistByTotalScoreButtonDisabled(false);
+		setIsSortArtistByTotalTracksDurationButtonDisabled(false);
+		setIsSortArtistByTotalTracksNumberButtonDisabled(false);
+	};
 
 	const openAddArtistModal = () => setIsAddArtistmodalOpen(true);
 
@@ -102,6 +130,125 @@ export const MusicArtists = () => {
 		}
 	};
 
+	const renderSimplifiedArtistLegend = (artist: MusicArtistType) =>
+		!isSortArtistByNameButtonDisabled &&
+		(isSortArtistByOriginalScoreButtonDisabled ? (
+			<StyledScoreLegend scoreColor={getQualityGradientColor(artist.originalScore)}>
+				{`${Math.round(artist.originalScore)} %`}
+			</StyledScoreLegend>
+		) : isSortArtistByTotalScoreButtonDisabled ? (
+			<StyledScoreLegend scoreColor={getQualityGradientColor(artist.totalScore)}>
+				{`${Math.round(artist.totalScore)} %`}
+			</StyledScoreLegend>
+		) : (
+			<>
+				{isSortArtistByOriginalTracksDurationButtonDisabled
+					? msDurationToDisplayDuration(artist.originalTracksDuration)
+					: isSortArtistByOriginalTracksNumberButtonDisabled
+					? artist.originalTracksNumber
+					: isSortArtistByTotalTracksDurationButtonDisabled
+					? msDurationToDisplayDuration(artist.totalTracksDuration)
+					: artist.totalTracksNumber}
+			</>
+		));
+
+	const sortArtistsByName = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.name < artist1.name ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByNameButtonDisabled(true);
+	};
+
+	const sortArtistsByOriginalScore = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.originalScore < artist1.originalScore ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByOriginalScoreButtonDisabled(true);
+	};
+
+	const sortArtistsByOriginalTracksDuration = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.originalTracksDuration < artist1.originalTracksDuration ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByOriginalTracksDurationButtonDisabled(true);
+	};
+
+	const sortArtistsByOriginalTracksNumber = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.originalTracksNumber < artist1.originalTracksNumber ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByOriginalTracksNumberButtonDisabled(true);
+	};
+
+	const sortArtistsByTotalScore = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.totalScore < artist1.totalScore ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByTotalScoreButtonDisabled(true);
+	};
+
+	const sortArtistsByTotalTracksDuration = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.totalTracksDuration < artist1.totalTracksDuration ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByTotalTracksDurationButtonDisabled(true);
+	};
+
+	const sortArtistsByTotalTracksNumber = (
+		artists: MusicArtistType[],
+		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>
+	) => {
+		sortArtistsByName(artists, setArtists);
+		const sortedArtists = [...artists];
+		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
+			return artist0.totalTracksNumber < artist1.totalTracksNumber ? -1 : 1;
+		});
+		setArtists(sortedArtists);
+		ableAllArtistsSortButtons();
+		setIsSortArtistByTotalTracksNumberButtonDisabled(true);
+	};
+
 	const switchArtistView = () => setAreArtistsDetailed(!areArtistsDetailed);
 
 	const updateArtistsState = (response: AxiosResponse<any, any>) => {
@@ -116,6 +263,8 @@ export const MusicArtists = () => {
 		setArtistsDictionnary(initialArtistsDictionnary);
 
 		updateGenresState(genres);
+
+		sortArtistsByName(artists, setArtists);
 	};
 
 	const updateGenresState = (genres: MusicGenreType[]) => {
@@ -153,6 +302,72 @@ export const MusicArtists = () => {
 					{areArtistsDetailed ? simplifiedViewText : detailedViewText}
 				</Button>
 			</StyledCenteredDiv>
+			<StyledButtonsRow>
+				<StyledSortLabel>{sortText}</StyledSortLabel>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByNameButtonDisabled}
+					onClick={() => {
+						sortArtistsByName(artists, setArtists);
+					}}
+				>
+					{nameText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByOriginalScoreButtonDisabled}
+					onClick={() => {
+						sortArtistsByOriginalScore(artists, setArtists);
+					}}
+				>
+					{originalScoreText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByOriginalTracksDurationButtonDisabled}
+					onClick={() => {
+						sortArtistsByOriginalTracksDuration(artists, setArtists);
+					}}
+				>
+					{originalDurationText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByOriginalTracksNumberButtonDisabled}
+					onClick={() => {
+						sortArtistsByOriginalTracksNumber(artists, setArtists);
+					}}
+				>
+					{originalTracksNumberText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByTotalScoreButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalScore(artists, setArtists);
+					}}
+				>
+					{totalScoreText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByTotalTracksDurationButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalTracksDuration(artists, setArtists);
+					}}
+				>
+					{totalDurationText}
+				</Button>
+				<Button
+					customStyle={sortButtonStyle}
+					isButtonDisabled={isSortArtistByTotalTracksNumberButtonDisabled}
+					onClick={() => {
+						sortArtistsByTotalTracksNumber(artists, setArtists);
+					}}
+				>
+					{totalTracksNumberText}
+				</Button>
+			</StyledButtonsRow>
 			{areArtistsDetailed ? (
 				<StyledList>
 					{artists.map((artist: MusicArtistType) => (
@@ -270,7 +485,8 @@ export const MusicArtists = () => {
 									}`}
 									alt={`${artist.name} picture`}
 								/>
-								<>{artist.name}</>
+								<div>{artist.name}</div>
+								{renderSimplifiedArtistLegend(artist)}
 							</StyledArtistCard>
 						</RouterLink>
 					))}
@@ -334,6 +550,17 @@ const paddedButtonStyle = css`
 	${mdButtonStyle}
 `;
 
+const sortButtonStyle = css`
+	border: 2px solid;
+	border-radius: 4px;
+	margin: 2px;
+	padding: 4px 16px;
+	${clickToActionStyle}
+	&:disabled {
+		color: ${pushedColor};
+	}
+`;
+
 const warningGenreStyle = css`
 	color: ${warningColor};
 `;
@@ -378,7 +605,6 @@ const StyledGrid = styled.div`
 
 const StyledList = styled.div`
 	margin: 28px 0;
-	${centeredColumnStyle}
 `;
 
 const StyledListElement = styled.div`
@@ -396,6 +622,10 @@ const StyledRow = styled.div`
 	flex-wrap: wrap;
 `;
 
+const StyledButtonsRow = styled(StyledRow)`
+	margin-top: 14px;
+`;
+
 const StyledS = styled.div`
 	font-weight: 900;
 	color: ${getQualityGradientColor(100)};
@@ -409,6 +639,7 @@ const StyledScoresColumn = styled.div`
 const StyledScoresDurationColumn = styled.div`
 	padding-right: 16px;
 	text-align: start;
+	white-space: nowrap;
 `;
 
 const StyledScoresGrid = styled.div`
@@ -420,6 +651,7 @@ const StyledScoresGrid = styled.div`
 const StyledScoresLabel = styled.div`
 	padding-right: 16px;
 	text-align: end;
+	white-space: nowrap;
 `;
 
 const StyledSuggestedArtistCard = styled.div`
@@ -441,7 +673,17 @@ const StyledScore = styled.div<{ scoreColor?: string | undefined }>`
 	padding-bottom: 0;
 `;
 
+const StyledScoreLegend = styled.div<{ scoreColor?: string | undefined }>`
+	margin-left: 4px;
+	color: ${(props) => props.scoreColor};
+`;
+
 const StylesScoreContainer = styled.div`
 	padding: 0 16px;
 	${centeredColumnStyle}
+`;
+
+const StyledSortLabel = styled.div`
+	font-weight: 700;
+	margin-right: 8px;
 `;

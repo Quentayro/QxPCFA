@@ -21,7 +21,7 @@ export const clickToActionStyle = css`
 	}
 	&:disabled {
 		color: ${disabledColor};
-		cursor: not-allowed;
+		cursor: not-allowed !important;
 		fill: ${disabledColor};
 	}
 `;
