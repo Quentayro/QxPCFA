@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import { Button, RouterLink } from 'components';
 import { AddArtistModal, AddGenreDisplayTextModal, AddSuggestedArtistModal } from 'pages/Music/components';
 import { getQualityGradientColor, pushedColor, warningColor } from 'utils/colors';
-import { musicPicturePlaceHolder, spotifyPictureUrlPrefix } from 'utils/constants';
+import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 import { Context } from 'utils/context';
 import { getMusicArtistsEndpoint } from 'utils/endpoints';
 import { musicArtistsPath } from 'utils/paths';
@@ -441,7 +441,7 @@ export const MusicArtists = () => {
 						<StyledListElement key={artist.id}>
 							<StyledMusicArtistPicture
 								src={`${spotifyPictureUrlPrefix}${
-									artist.picture ? artist.picture : musicPicturePlaceHolder
+									artist.picture ? artist.picture : spotifyPictureUrlPlaceholder
 								}`}
 								alt={`${artist.name} picture`}
 							/>
@@ -548,7 +548,7 @@ export const MusicArtists = () => {
 							<StyledArtistCard>
 								<StyledMusicArtistPicture
 									src={`${spotifyPictureUrlPrefix}${
-										artist.picture ? artist.picture : musicPicturePlaceHolder
+										artist.picture ? artist.picture : spotifyPictureUrlPlaceholder
 									}`}
 									alt={`${artist.name} picture`}
 								/>
@@ -629,7 +629,7 @@ export const MusicArtists = () => {
 								<StyledSuggestedArtistCard>
 									<StyledSuggestedArtistPicture
 										src={`${spotifyPictureUrlPrefix}${
-											artist.picture ? artist.picture : musicPicturePlaceHolder
+											artist.picture ? artist.picture : spotifyPictureUrlPlaceholder
 										}`}
 										alt={`${artist.name} picture`}
 									/>
@@ -655,7 +655,7 @@ export const MusicArtists = () => {
 								<StyledListElement key={artist.id}>
 									<StyledSuggestedArtistPicture
 										src={`${spotifyPictureUrlPrefix}${
-											artist.picture ? artist.picture : musicPicturePlaceHolder
+											artist.picture ? artist.picture : spotifyPictureUrlPlaceholder
 										}`}
 										alt={`${artist.name} picture`}
 									/>

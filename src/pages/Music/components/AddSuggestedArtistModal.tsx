@@ -16,7 +16,7 @@ import {
 import { MusicArtistType } from 'utils/types';
 import { StyledCenteredDiv, StyledMusicArtistPicture, mdButtonStyle } from 'utils/styles';
 import styled, { css } from 'styled-components';
-import { musicPicturePlaceHolder, spotifyPictureUrlPrefix } from 'utils/constants';
+import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 
 type PropsType = {
 	selectedSuggestedArtist?: MusicArtistType | undefined;
@@ -75,7 +75,7 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 			<StyledPaddedDiv>{`${addSuggestedArtistText[0]} ${selectedSuggestedArtist?.name} ${addSuggestedArtistText[1]}`}</StyledPaddedDiv>
 			<StyledMusicArtistPicture
 				src={`${spotifyPictureUrlPrefix}${
-					selectedSuggestedArtist?.picture ? selectedSuggestedArtist.picture : musicPicturePlaceHolder
+					selectedSuggestedArtist?.picture ? selectedSuggestedArtist.picture : spotifyPictureUrlPlaceholder
 				}`}
 				alt={`${selectedSuggestedArtist?.name} picture`}
 			/>
