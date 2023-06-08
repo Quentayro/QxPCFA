@@ -105,6 +105,11 @@ export const AddArtistModal = (props: PropsType) => {
 	);
 };
 
+const paddedButtonStyle = css`
+	margin-top: 32px;
+	${mdButtonStyle}
+`;
+
 const StyledPaddedDiv = styled.div`
 	padding-bottom: 8px;
 `;
@@ -112,9 +117,4 @@ const StyledPaddedDiv = styled.div`
 const StyledSpotifyLink = styled.a`
 	color: ${spotifyColor};
 	${clickToActionStyle}
-`;
-
-const paddedButtonStyle = css`
-	margin-top: 32px;
-	${mdButtonStyle}
 `;
