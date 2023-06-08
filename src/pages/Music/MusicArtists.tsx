@@ -125,6 +125,13 @@ export const MusicArtists = () => {
 		}
 	};
 
+	const msDurationToDisplayDuration = (msDuration: number) => {
+		const hDuration = Math.floor(msDuration / 3600000);
+		const minDuration = Math.floor((msDuration - hDuration * 3600000) / 60000);
+
+		return `${hDuration} ${abbreviatedHourText} ${minDuration} ${abbreviatedMinuteText}`;
+	};
+
 	const openAddArtistModal = () => setIsAddArtistmodalOpen(true);
 
 	const openAddGenreDisplayTextModal = (genre: string) => {
@@ -343,13 +350,6 @@ export const MusicArtists = () => {
 		}
 
 		setGenresDictionnary(initialGenresDictionnary);
-	};
-
-	const msDurationToDisplayDuration = (msDuration: number) => {
-		const hDuration = Math.floor(msDuration / 3600000);
-		const minDuration = Math.floor((msDuration - hDuration * 3600000) / 60000);
-
-		return `${hDuration} ${abbreviatedHourText} ${minDuration} ${abbreviatedMinuteText}`;
 	};
 
 	return (
