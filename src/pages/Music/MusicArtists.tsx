@@ -93,7 +93,7 @@ export const MusicArtists = () => {
 	] = useState(false);
 	const [suggestedArtists, setSuggestedArtists] = useState<MusicArtistType[]>([]);
 	const [selectedGenre, setSelectedGenre] = useState('');
-	const [selectedSuggestedArtist, setSelectedSuggestedArtist] = useState<MusicArtistType>();
+	const [artist, setSelectedSuggestedArtist] = useState<MusicArtistType>();
 
 	useEffect(() => {
 		requestGetArtists();
@@ -727,7 +727,7 @@ export const MusicArtists = () => {
 			)}
 			{isAddSuggestedArtistModalOpen && (
 				<AddSuggestedArtistModal
-					selectedSuggestedArtist={selectedSuggestedArtist}
+					artist={artist}
 					setIsOpen={setIsAddSuggestedArtistModalOpen}
 					updateArtistsState={updateArtistsState}
 				/>

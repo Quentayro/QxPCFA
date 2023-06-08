@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { useContext, useState } from 'react';
+import styled, { css } from 'styled-components';
 
 import { Button, Modal } from 'components';
 import { Context } from 'utils/context';
@@ -13,19 +14,19 @@ import {
 	noText,
 	yesText
 } from 'utils/texts';
-import { MusicArtistType } from 'utils/types';
-import { StyledCenteredDiv, StyledMusicArtistPicture, mdButtonStyle } from 'utils/styles';
-import styled, { css } from 'styled-components';
+import { mdButtonStyle, StyledCenteredDiv, StyledMusicArtistPicture } from 'utils/styles';
 import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 
+import type { MusicArtistType } from 'utils/types';
+
 type PropsType = {
-	selectedSuggestedArtist?: MusicArtistType | undefined;
+	artist?: MusicArtistType | undefined;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	updateArtistsState: (response: AxiosResponse<any, any>) => void;
 };
 
 export const AddSuggestedArtistModal = (props: PropsType) => {
-	const { selectedSuggestedArtist, setIsOpen, updateArtistsState } = props;
+	const { artist, setIsOpen, updateArtistsState } = props;
 
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
@@ -37,7 +38,7 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 	const requestAddArtist = async () => {
 		setIsYesButtonDisabled(true);
 
-		const spotifyId = selectedSuggestedArtist?.spotifyId;
+		const spotifyId = artist?.spotifyId;
 
 		try {
 			if (!spotifyId) throw { code: 'ERR_INVALID_INPUT' };
@@ -47,6 +48,7 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 			});
 
 			updateArtistsState(reponse);
+			setIsYesButtonDisabled(false);
 			setIsOpen(false);
 		} catch (error: any) {
 			const { code } = error;
@@ -72,23 +74,21 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 
 	return (
 		<Modal setIsOpen={setIsOpen}>
-			<StyledPaddedDiv>{`${addSuggestedArtistText[0]} ${selectedSuggestedArtist?.name} ${addSuggestedArtistText[1]}`}</StyledPaddedDiv>
+			<StyledPaddedDiv>{`${addSuggestedArtistText[0]} ${artist?.name} ${addSuggestedArtistText[1]}`}</StyledPaddedDiv>
 			<StyledMusicArtistPicture
-				src={`${spotifyPictureUrlPrefix}${
-					selectedSuggestedArtist?.picture ? selectedSuggestedArtist.picture : spotifyPictureUrlPlaceholder
-				}`}
-				alt={`${selectedSuggestedArtist?.name} picture`}
+				src={`${spotifyPictureUrlPrefix}${artist?.picture ? artist.picture : spotifyPictureUrlPlaceholder}`}
+				alt={`${artist?.name} picture`}
 			/>
 			<StyledCenteredDiv>
 				<Button
-					customStyle={paddedButtonStyle}
+					customStyle={marginedButtonStyle}
 					onClick={requestAddArtist}
 					isButtonDisabled={isYesDisabled}
 				>
 					{yesText}
 				</Button>
 				<Button
-					customStyle={paddedButtonStyle}
+					customStyle={marginedButtonStyle}
 					onClick={closeModal}
 					isButtonDisabled={isYesDisabled}
 				>
@@ -99,11 +99,11 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 	);
 };
 
-const StyledPaddedDiv = styled.div`
-	padding-bottom: 32px;
-`;
-
-const paddedButtonStyle = css`
+const marginedButtonStyle = css`
 	margin: 32px 8px 0;
 	${mdButtonStyle}
+`;
+
+const StyledPaddedDiv = styled.div`
+	padding-bottom: 32px;
 `;
