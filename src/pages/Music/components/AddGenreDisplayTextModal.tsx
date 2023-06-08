@@ -13,7 +13,8 @@ import {
 	errorText,
 	validateText
 } from 'utils/texts';
-import { MusicGenreType } from 'utils/types';
+
+import type { MusicGenreType } from 'utils/types';
 
 type PropsType = {
 	selectedGenre?: string | undefined;
@@ -69,11 +70,15 @@ export const AddGenreDisplayTextModal = (props: PropsType) => {
 
 	return (
 		<Modal setIsOpen={setIsOpen}>
-			<StyledPaddedDiv>{`${chooseGenreDisplayTextText[0]}${selectedGenre}${chooseGenreDisplayTextText[1]}`}</StyledPaddedDiv>
+			<StyledPaddedDiv>
+				{`${chooseGenreDisplayTextText[0]}${selectedGenre}${chooseGenreDisplayTextText[1]}`}
+			</StyledPaddedDiv>
+
 			<Input
 				input={genreDisplayTextInput}
 				setInput={setGenreDisplayTextInput}
 			/>
+
 			<Button
 				customStyle={paddedButtonStyle}
 				isButtonDisabled={isValidateButtonDisabled}
