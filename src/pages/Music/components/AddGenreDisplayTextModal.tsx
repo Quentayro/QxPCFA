@@ -71,7 +71,6 @@ export const AddGenreDisplayTextModal = (props: PropsType) => {
 		<Modal setIsOpen={setIsOpen}>
 			<StyledPaddedDiv>{`${chooseGenreDisplayTextText[0]}${selectedGenre}${chooseGenreDisplayTextText[1]}`}</StyledPaddedDiv>
 			<Input
-				cantCopyFromClipboard={true}
 				input={genreDisplayTextInput}
 				setInput={setGenreDisplayTextInput}
 			/>

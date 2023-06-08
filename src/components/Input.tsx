@@ -5,14 +5,14 @@ import { Button } from 'components';
 import { centeredStyle, StyledCenteredDiv } from 'utils/styles';
 
 type PropsType = {
-	cantCopyFromClipboard?: boolean | undefined;
+	canCopyFromClipboard?: boolean | undefined;
 	input: string;
 	setInput: React.Dispatch<React.SetStateAction<string>>;
 	width?: string | undefined;
 };
 
 export const Input = (props: PropsType) => {
-	const { cantCopyFromClipboard, input, setInput, width } = props;
+	const { canCopyFromClipboard, input, setInput, width } = props;
 
 	const clear = () => setInput('');
 
@@ -31,7 +31,7 @@ export const Input = (props: PropsType) => {
 				width={width}
 			/>
 
-			{!cantCopyFromClipboard && (
+			{canCopyFromClipboard && (
 				<Button
 					customStyle={marginedIconStyle}
 					onClick={pasteFromClipboard}

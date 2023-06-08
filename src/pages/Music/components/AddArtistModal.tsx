@@ -88,6 +88,7 @@ export const AddArtistModal = (props: PropsType) => {
 			</StyledPaddedDiv>
 
 			<Input
+				canCopyFromClipboard
 				input={artistSpotifyLinkInput}
 				setInput={setArtistSpotifyLinkInput}
 				width="544px"
