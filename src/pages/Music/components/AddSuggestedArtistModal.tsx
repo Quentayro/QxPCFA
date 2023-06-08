@@ -74,11 +74,15 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 
 	return (
 		<Modal setIsOpen={setIsOpen}>
-			<StyledPaddedDiv>{`${addSuggestedArtistText[0]} ${artist?.name} ${addSuggestedArtistText[1]}`}</StyledPaddedDiv>
+			<StyledPaddedDiv>
+				{`${addSuggestedArtistText[0]} ${artist?.name} ${addSuggestedArtistText[1]}`}
+			</StyledPaddedDiv>
+
 			<StyledMusicArtistPicture
 				src={`${spotifyPictureUrlPrefix}${artist?.picture ? artist.picture : spotifyPictureUrlPlaceholder}`}
 				alt={`${artist?.name} picture`}
 			/>
+
 			<StyledCenteredDiv>
 				<Button
 					customStyle={marginedButtonStyle}
@@ -87,6 +91,7 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 				>
 					{yesText}
 				</Button>
+
 				<Button
 					customStyle={marginedButtonStyle}
 					onClick={closeModal}
