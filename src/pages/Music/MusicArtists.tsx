@@ -51,12 +51,16 @@ import { h2Style } from 'utils/styles';
 import { clickToActionStyle } from 'utils/styles';
 
 export const MusicArtists = () => {
-	// TODO : Display first rank date
-	// TODO : update date ?
+	// TASK : Handle first rank date
+	// TASK : Handle update date
+	// TASK : Display related artists for suggested artists
+	// TASK : Filters
+	// TASK : Better HTML/CSS structure
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
 
 	const [areArtistsDetailed, setAreArtistsDetailed] = useState(false);
+	const [areSuggestedArtistsDetailed, setAreSuggestedArtistsDetailed] = useState(false);
 	const [artists, setArtists] = useState<MusicArtistType[]>([]);
 	const [artistsDictionnary, setArtistsDictionnary] = useState<BooleanDictionnaryType>({});
 	const [genresDictionnary, setGenresDictionnary] = useState<StringDictionnaryType>({});
@@ -104,7 +108,6 @@ export const MusicArtists = () => {
 	}, [isAddSuggestedArtistModalOpen]);
 
 	const ableAllArtistsSortButtons = (isSuggestions?: boolean | undefined) => {
-		console.log(isSuggestions);
 		if (isSuggestions) {
 			setIsSortSuggestedArtistByNameButtonDisabled(false);
 			setIsSortSuggestedArtistByOriginalScoreButtonDisabled(false);
@@ -202,12 +205,10 @@ export const MusicArtists = () => {
 		setArtists: React.Dispatch<React.SetStateAction<MusicArtistType[]>>,
 		isSuggestions?: boolean | undefined
 	) => {
-		console.log(artists);
 		const sortedArtists = [...artists];
 		sortedArtists.sort((artist0: MusicArtistType, artist1: MusicArtistType) => {
-			return artist0.name < artist1.name ? -1 : 1;
+			return artist0.name.toLowerCase() < artist1.name.toLowerCase() ? -1 : 1;
 		});
-		console.log(sortedArtists);
 		setArtists(sortedArtists);
 		ableAllArtistsSortButtons(isSuggestions);
 		!isSuggestions ? setIsSortArtistByNameButtonDisabled(true) : setIsSortSuggestedArtistByNameButtonDisabled(true);
@@ -313,6 +314,8 @@ export const MusicArtists = () => {
 	};
 
 	const switchArtistView = () => setAreArtistsDetailed(!areArtistsDetailed);
+
+	const switchSuggestedArtistView = () => setAreSuggestedArtistsDetailed(!areSuggestedArtistsDetailed);
 
 	const updateArtistsState = (response: AxiosResponse<any, any>) => {
 		const { artists, genres, suggestedArtists } = response.data;
@@ -433,7 +436,7 @@ export const MusicArtists = () => {
 				</Button>
 			</StyledButtonsRow>
 			{areArtistsDetailed ? (
-				<StyledList>
+				<div>
 					{artists.map((artist: MusicArtistType) => (
 						<StyledListElement key={artist.id}>
 							<StyledMusicArtistPicture
@@ -517,7 +520,7 @@ export const MusicArtists = () => {
 										<div>{msDurationToDisplayDuration(artist.totalTracksDuration)}</div>
 									</StyledScoresDurationColumn>
 								</StyledScoresGrid>
-								<StyledCenteredDiv>
+								<StyledScoresContainer>
 									<StylesScoreContainer>
 										<StyledScore scoreColor={getQualityGradientColor(artist.originalScore)}>
 											{`${Math.round(artist.originalScore)} %`}
@@ -530,11 +533,11 @@ export const MusicArtists = () => {
 										</StyledScore>
 										<div>{totalScoreText}</div>
 									</StylesScoreContainer>
-								</StyledCenteredDiv>
+								</StyledScoresContainer>
 							</StyledDetailedArtist>
 						</StyledListElement>
 					))}
-				</StyledList>
+				</div>
 			) : (
 				<StyledGrid>
 					{artists.map((artist: MusicArtistType) => (
@@ -558,6 +561,12 @@ export const MusicArtists = () => {
 			)}
 
 			<StyledH2>{suggestionsText}</StyledH2>
+			<Button
+				customStyle={extraPaddedButtonStyle}
+				onClick={switchSuggestedArtistView}
+			>
+				{areSuggestedArtistsDetailed ? simplifiedViewText : detailedViewText}
+			</Button>
 			<StyledButtonsRow>
 				<StyledSortLabel>{sortText}</StyledSortLabel>
 				<Button
@@ -606,35 +615,102 @@ export const MusicArtists = () => {
 					{totalScoreText}
 				</Button>
 			</StyledButtonsRow>
-			<StyledGrid>
-				{suggestedArtists.map((artist: MusicArtistType) => (
-					<Button
-						customStyle={css``}
-						key={artist.id}
-						onClick={() => {
-							openAddSuggestedArtistModal(artist);
-						}}
-					>
-						<StyledSuggestedArtistCard>
-							<StyledSuggestedArtistPicture
-								src={`${spotifyPictureUrlPrefix}${
-									artist.picture ? artist.picture : musicPicturePlaceHolder
-								}`}
-								alt={`${artist.name} picture`}
-							/>
-							<div>
-								<>{`${artist.name} -`}</>
-								{!isSortSuggestedArtistByTotalScoreButtonDisabled && (
-									<StyledScoreLegend scoreColor={getQualityGradientColor(artist.originalScore)}>
-										{`${Math.round(artist.originalScore)} %`}
-									</StyledScoreLegend>
-								)}
-							</div>
-							{renderSimplifiedSuggestedArtistLegend(artist)}
-						</StyledSuggestedArtistCard>
-					</Button>
-				))}
-			</StyledGrid>
+			{
+				<StyledGrid>
+					{!areSuggestedArtistsDetailed ? (
+						suggestedArtists.map((artist: MusicArtistType) => (
+							<Button
+								customStyle={css``}
+								key={artist.id}
+								onClick={() => {
+									openAddSuggestedArtistModal(artist);
+								}}
+							>
+								<StyledSuggestedArtistCard>
+									<StyledSuggestedArtistPicture
+										src={`${spotifyPictureUrlPrefix}${
+											artist.picture ? artist.picture : musicPicturePlaceHolder
+										}`}
+										alt={`${artist.name} picture`}
+									/>
+									<div>
+										<>{`${artist.name}${
+											!isSortSuggestedArtistByTotalScoreButtonDisabled && ' -'
+										}`}</>
+										{!isSortSuggestedArtistByTotalScoreButtonDisabled && (
+											<StyledScoreLegend
+												scoreColor={getQualityGradientColor(artist.originalScore)}
+											>
+												{`${Math.round(artist.originalScore)} %`}
+											</StyledScoreLegend>
+										)}
+									</div>
+									{renderSimplifiedSuggestedArtistLegend(artist)}
+								</StyledSuggestedArtistCard>
+							</Button>
+						))
+					) : (
+						<div>
+							{suggestedArtists.map((artist: MusicArtistType) => (
+								<StyledListElement key={artist.id}>
+									<StyledSuggestedArtistPicture
+										src={`${spotifyPictureUrlPrefix}${
+											artist.picture ? artist.picture : musicPicturePlaceHolder
+										}`}
+										alt={`${artist.name} picture`}
+									/>
+									<StyledDetailedArtist>
+										<Button
+											customStyle={nonPaddedH2Style}
+											onClick={() => {
+												openAddSuggestedArtistModal(artist);
+											}}
+										>
+											{artist.name}
+										</Button>
+										<StyledRow>
+											{artist.genres.map((genre: string, index: number) => (
+												<StyledRow key={genre}>
+													{genresDictionnary[genre] ? (
+														<>{genresDictionnary[genre]}</>
+													) : (
+														<Button
+															customStyle={warningGenreStyle}
+															onClick={() => openAddGenreDisplayTextModal(genre)}
+														>
+															{genre}
+														</Button>
+													)}
+													{index !== artist.genres.length - 1 && (
+														<StyledPaddedDash>-</StyledPaddedDash>
+													)}
+												</StyledRow>
+											))}
+										</StyledRow>
+										<div>{`${originalTitlesText} : ${artist.originalTracksNumber}`}</div>
+										<div>{`${remixText} : ${artist.remixTracksNumber}`}</div>
+										<div>{`${totalText} : ${artist.totalTracksNumber}`}</div>
+										<StyledScoresContainer>
+											<StylesScoreContainer>
+												<StyledScore scoreColor={getQualityGradientColor(artist.originalScore)}>
+													{`${Math.round(artist.originalScore)} %`}
+												</StyledScore>
+												<div>{originalScoreText}</div>
+											</StylesScoreContainer>
+											<StylesScoreContainer>
+												<StyledScore scoreColor={getQualityGradientColor(artist.totalScore)}>
+													{`${Math.round(artist.totalScore)} %`}
+												</StyledScore>
+												<div>{totalScoreText}</div>
+											</StylesScoreContainer>
+										</StyledScoresContainer>
+									</StyledDetailedArtist>
+								</StyledListElement>
+							))}
+						</div>
+					)}
+				</StyledGrid>
+			}
 			{isAddArtistModalOpen && (
 				<AddArtistModal
 					artistsDictionnary={artistsDictionnary}
@@ -663,6 +739,16 @@ export const MusicArtists = () => {
 const artistCardStyle = css`
 	text-align: center;
 	${centeredColumnStyle}
+`;
+
+const extraPaddedButtonStyle = css`
+	margin-top: 16px;
+	${mdButtonStyle}
+`;
+
+const nonPaddedH2Style = css`
+	${h2Style}
+	padding: 0;
 `;
 
 const paddedButtonStyle = css`
@@ -723,10 +809,6 @@ const StyledGrid = styled.div`
 	margin: 32px 0;
 `;
 
-const StyledList = styled.div`
-	margin: 28px 0;
-`;
-
 const StyledListElement = styled.div`
 	align-items: center;
 	display: flex;
@@ -736,10 +818,16 @@ const StyledListElement = styled.div`
 const StyledPaddedDash = styled.div`
 	padding: 4px;
 `;
+
+const StyledScoresContainer = styled.div`
+	display: flex;
+`;
+
 const StyledRow = styled.div`
 	align-items: center;
 	display: flex;
 	flex-wrap: wrap;
+	margin-bottom: 4px;
 `;
 
 const StyledButtonsRow = styled(StyledRow)`
@@ -765,7 +853,7 @@ const StyledScoresDurationColumn = styled.div`
 const StyledScoresGrid = styled.div`
 	align-items: end;
 	display: flex;
-	padding-top: 16px;
+	padding-top: 8px;
 `;
 
 const StyledScoresLabel = styled.div`
@@ -800,7 +888,7 @@ const StyledScoreLegend = styled.span<{ scoreColor?: string | undefined }>`
 `;
 
 const StylesScoreContainer = styled.div`
-	padding: 0 16px;
+	padding-left: 64px;
 	${centeredColumnStyle}
 `;
 

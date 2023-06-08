@@ -63,6 +63,10 @@ export const musicArtistPictureStyle = css`
 	object-fit: cover;
 `;
 
+export const StyledCenteredColumn = styled.div`
+	${centeredColumnStyle}
+`;
+
 export const StyledCenteredDiv = styled.div`
 	${centeredStyle}
 `;
