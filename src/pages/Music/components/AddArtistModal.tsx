@@ -23,11 +23,11 @@ import type { BooleanDictionnaryType } from 'utils/types';
 type PropsType = {
 	artistsDictionnary: BooleanDictionnaryType;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	updateArtistsState: (response: AxiosResponse<any, any>) => void;
+	updateArtistsStates: (response: AxiosResponse<any, any>) => void;
 };
 
 export const AddArtistModal = (props: PropsType) => {
-	const { artistsDictionnary, setIsOpen, updateArtistsState } = props;
+	const { artistsDictionnary, setIsOpen, updateArtistsStates } = props;
 
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
@@ -48,7 +48,7 @@ export const AddArtistModal = (props: PropsType) => {
 				headers: { 'Content-Type': 'text/plain' }
 			});
 
-			updateArtistsState(response);
+			updateArtistsStates(response);
 			setIsAddArtistButtonDisabled(false);
 			setIsOpen(false);
 		} catch (error: any) {
@@ -90,6 +90,7 @@ export const AddArtistModal = (props: PropsType) => {
 			<Input
 				canCopyFromClipboard
 				input={artistSpotifyLinkInput}
+				maxWidth="60vw"
 				setInput={setArtistSpotifyLinkInput}
 				width="544px"
 			/>

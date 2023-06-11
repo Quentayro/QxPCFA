@@ -22,11 +22,11 @@ import type { MusicArtistType } from 'utils/types';
 type PropsType = {
 	artist?: MusicArtistType | undefined;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	updateArtistsState: (response: AxiosResponse<any, any>) => void;
+	updateArtistsStates: (response: AxiosResponse<any, any>) => void;
 };
 
 export const AddSuggestedArtistModal = (props: PropsType) => {
-	const { artist, setIsOpen, updateArtistsState } = props;
+	const { artist, setIsOpen, updateArtistsStates } = props;
 
 	const context = useContext(Context);
 	const { openErrorNotification } = context;
@@ -47,7 +47,7 @@ export const AddSuggestedArtistModal = (props: PropsType) => {
 				headers: { 'Content-Type': 'text/plain' }
 			});
 
-			updateArtistsState(reponse);
+			updateArtistsStates(reponse);
 			setIsYesButtonDisabled(false);
 			setIsOpen(false);
 		} catch (error: any) {

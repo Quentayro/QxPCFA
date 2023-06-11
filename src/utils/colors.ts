@@ -22,6 +22,6 @@ export const qualityGradientColors = [
 export const spotifyColor = '#1DB954';
 export const warningColor = 'orange';
 
-export const getQualityGradientColor = (percentage: number) => {
-	return qualityGradientColors[Math.round(percentage / 10)];
+export const getQualityGradientColor = (score: number) => {
+	return qualityGradientColors[Math.round(score / 10)];
 };

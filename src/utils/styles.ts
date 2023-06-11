@@ -5,6 +5,7 @@ import { activeColor, disabledColor, hoverColor, mainColor } from 'utils/colors'
 export const centeredStyle = css`
 	align-items: center;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 `;
 
@@ -34,12 +35,16 @@ const h1Style = css`
 	padding: 16px 0;
 `;
 
-export const h2Style = css`
+export const unpaddedH2Style = css`
 	font-family: Roboto, Lato, sans-serif;
 	font-size: 32px;
 	font-weight: 700;
 	margin: 0;
+`;
+
+export const h2Style = css`
 	padding: 8px 0;
+	${unpaddedH2Style}
 `;
 
 export const buttonStyle = css`

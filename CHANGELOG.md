@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## **v0.3.0-alpha** (2023-06-08)
+## **v0.3.0-alpha** (2023-06-11)
 ### ✨ New
 - Music artists page
 

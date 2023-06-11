@@ -7,12 +7,13 @@ import { centeredStyle, StyledCenteredDiv } from 'utils/styles';
 type PropsType = {
 	canCopyFromClipboard?: boolean | undefined;
 	input: string;
+	maxWidth?: string | undefined;
 	setInput: React.Dispatch<React.SetStateAction<string>>;
 	width?: string | undefined;
 };
 
 export const Input = (props: PropsType) => {
-	const { canCopyFromClipboard, input, setInput, width } = props;
+	const { canCopyFromClipboard, input, maxWidth, setInput, width } = props;
 
 	const clear = () => setInput('');
 
@@ -26,6 +27,7 @@ export const Input = (props: PropsType) => {
 	return (
 		<StyledCenteredDiv>
 			<StyledInput
+				maxWidth={maxWidth}
 				onChange={updateInput}
 				value={input}
 				width={width}
@@ -55,9 +57,15 @@ const marginedIconStyle = css`
 	${centeredStyle}
 `;
 
-const StyledInput = styled.input<{ width?: string | undefined }>`
+const StyledInput = styled.input<{ maxWidth?: string | undefined; width?: string | undefined }>`
 	padding: 4px;
 	text-align: center;
+	${(props) =>
+		props.maxWidth &&
+		css`
+			max-width: ${props.maxWidth};
+		`}
+
 	${(props) =>
 		props.width &&
 		css`
