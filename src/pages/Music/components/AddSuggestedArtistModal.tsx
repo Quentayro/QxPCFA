@@ -3,8 +3,10 @@ import { useContext, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { Button, Modal } from 'components';
+import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 import { Context } from 'utils/context';
 import { postMusicArtistEndpoint } from 'utils/endpoints';
+import { mdButtonStyle, StyledCenteredDiv, StyledMusicArtistPicture } from 'utils/styles';
 import {
 	addSuggestedArtistText,
 	errorNoServerResponseText,
@@ -14,8 +16,6 @@ import {
 	noText,
 	yesText
 } from 'utils/texts';
-import { mdButtonStyle, StyledCenteredDiv, StyledMusicArtistPicture } from 'utils/styles';
-import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 
 import type { MusicArtistType } from 'utils/types';
 
