@@ -1,7 +1,7 @@
 {
 	"name": "qxpcfa",
-	"version": "v0.2.0-alpha",
-	"description": "Quentin Ayroles' Personal Companion Front App",
+	"version": "v0.3.0-alpha",
+	"description": "Quentin Ayroles' Personal Companion Front App.",
 	"author": {
 		"name": "Quentin Ayroles",
 		"email": "quentayro+qxpcfa@gmail.com",
@@ -19,6 +19,7 @@
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.1",
 		"@types/styled-components": "^5.1.26",
+		"axios": "^1.4.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.11.0",
