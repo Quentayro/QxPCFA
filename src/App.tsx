@@ -4,7 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Layout } from 'components';
 import { Error404, Home, MusicArtists } from 'pages';
 import { Context } from 'utils/context';
-import { homePath, musicArtistsPath } from 'utils/paths';
+import { homePath, musicArtistPath, musicArtistsPath } from 'utils/paths';
+import { MusicArtist } from 'pages/Music';
 
 export const App = () => {
 	const [errorMessage, setErrorMessage] = useState('');
@@ -35,6 +36,10 @@ export const App = () => {
 				{
 					path: homePath,
 					element: <Home />
+				},
+				{
+					path: musicArtistPath + ':spotifyId',
+					element: <MusicArtist />
 				},
 				{
 					path: musicArtistsPath,

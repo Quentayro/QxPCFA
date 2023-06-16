@@ -8,7 +8,7 @@ import { getQualityGradientColor, pushedColor, warningColor } from 'utils/colors
 import { spotifyPictureUrlPlaceholder, spotifyPictureUrlPrefix } from 'utils/constants';
 import { Context } from 'utils/context';
 import { getMusicArtistsEndpoint } from 'utils/endpoints';
-import { musicArtistsPath } from 'utils/paths';
+import { musicArtistPath } from 'utils/paths';
 import {
 	clickToActionStyle,
 	h2Style,
@@ -142,7 +142,7 @@ export const MusicArtists = () => {
 			{artists.map((artist: MusicArtistType) => (
 				<RouterLink
 					key={artist.id}
-					to={musicArtistsPath}
+					to={musicArtistPath + artist.spotifyId}
 				>
 					<StyledArtistCard>
 						<StyledMusicArtistPicture
@@ -174,7 +174,7 @@ export const MusicArtists = () => {
 						<StyledAlignedColumn>
 							<RouterLink
 								customStyle={paddedH2Style}
-								to={musicArtistsPath}
+								to={musicArtistPath + artist.spotifyId}
 							>
 								{artist.name}
 							</RouterLink>
